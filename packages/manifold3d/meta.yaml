@@ -1,0 +1,30 @@
+package:
+  name: manifold3d
+  version: 2.4.5
+  top-level:
+    - manifold3d
+source:
+  url: https://github.com/elalish/manifold/archive/refs/tags/v2.4.5.tar.gz
+  sha256: 29d4cd01ffc77eae4d0ce08b191d41b4b0e5099e4a918cae0123b49087b17140
+about:
+  home: https://pypi.org/project/manifold3d/
+  PyPI: https://pypi.org/project/manifold3d
+  summary: Library for geometric robustness
+  license: Apache Software License
+extra:
+  recipe-maintainers:
+    - abanuelo
+
+requirements:
+  host:
+    - trimesh
+
+build:
+  type: shared_library
+  script: |
+    export CMAKE_PREFIX_PATH=/usr/include/assimp:$CMAKE_PREFIX_PATH
+    echo $CMAKE_PREFIX_PATH
+    mkdir build
+    cd build
+    emcmake cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DMANIFOLD_PYBIND=ON -DMANIFOLD_DEBUG=ON -DMANIFOLD_EXPORT=ON -DMANIFOLD_PAR=NONE ..
+    emmake make -j ${PYODIDE_JOBS:-3}
